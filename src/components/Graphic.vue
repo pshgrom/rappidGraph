@@ -103,9 +103,11 @@ export default class App extends Vue {
 
     //Events
     stencil.on('element:dragend', (cloneView, evt, cloneArea) => { // При перемещении нового элемента на лист делаем под него родятеля и сейвим
-      const {x, y} = cloneArea
-      const mainBlock2 = generateMainBlock(x, y, 'test')
-      graph.addCells([mainBlock2]);
+      if (evt.target.tagName !== 'rect') {
+        const {x, y} = cloneArea
+        const mainBlock2 = generateMainBlock(x, y, 'test')
+        graph.addCells([mainBlock2]);
+      }
       saveGraph()
     });
 
