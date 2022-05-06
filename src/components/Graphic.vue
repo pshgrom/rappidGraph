@@ -9,6 +9,7 @@ import { Options, Vue } from 'vue-class-component';
 import { dia, ui, shapes, elementTools } from '@clientio/rappid';
 import * as joint from 'jointjs'
 import {generateMainBlock, generateRectNew} from "@/utils/generateFigures";
+import _ from 'underscore';
 
 window.joint = joint;
 
@@ -84,7 +85,6 @@ export default class App extends Vue {
     stencil.render()
 
     const saveGraph = () => {
-      console.log('save')
       const jsonGraph = JSON.stringify(graph)
       localStorage.setItem('figureSettings', jsonGraph)
     }
@@ -131,15 +131,23 @@ export default class App extends Vue {
     });
 
     paper.on({
-      'cell:pointerup': () => { // Сохраняем граф при действиях
-        saveGraph()
-      },
       'element:mouseenter': (elementView: any) => {
         elementView.addTools(removeTools);
       },
       'element:mouseleave': (elementView: any) => {
         elementView.removeTools();
       },
+      'cell:pointerup': (cellView: any) => {
+        const cell = cellView.model;
+        const cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
+
+        if (cellViewsBelow.length) {
+          const cellViewBelow = _.find(cellViewsBelow, (c) => { return c.model.id !== cell.id });
+
+          if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id) cellViewBelow.model.embed(cell);
+        }
+        saveGraph()
+      }
     });
   }
 
@@ -159,13 +167,15 @@ export default class App extends Vue {
     const rect = generateRectNew({
       positionName: 'right',
       magnet: 'active',
-      text: 'Rect1'
+      text: 'Rect1',
+      fill: '#c3c3c3'
     })
 
     const rect2 = generateRectNew({
       positionName: 'left',
       magnet: 'passive',
-      text: 'Rect2'
+      text: 'Rect2',
+      fill: '#fff'
     })
 
     stencil.load({

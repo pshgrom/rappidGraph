@@ -1,11 +1,8 @@
 import * as joint from 'jointjs'
 import {event} from "quasar";
-import position = event.position;
 window.joint = joint;
 
-// export const generateMainBlock = (settings: {cordX: number, cordY: number, nameFigure: string}) => {
 export const generateMainBlock = (cordX: number, cordY: number, nameFigure: string) => {
-  // console.warn('settings', settings)
   return new joint.shapes.basic.Rect({
     position: { x: cordX, y: cordY },
     size: { width: 300, height: 200 },
@@ -46,7 +43,7 @@ export const generateMainBlock = (cordX: number, cordY: number, nameFigure: stri
 //   })
 // }
 
-export const generateRectNew = (settings: {positionName?: string; magnet?: string; text?: string }) => {
+export const generateRectNew = (settings: {positionName?: string; magnet?: string; text?: string; fill: string }) => {
   return {
     type: 'standard.Rectangle',
     size: {width: 100, height: 50},
@@ -69,7 +66,7 @@ export const generateRectNew = (settings: {positionName?: string; magnet?: strin
             portBody: {
               r: 6,
               magnet: settings.magnet,
-              fill: '#c3c3c3',
+              fill: settings.fill,
               stroke: '#000'
             }
           }
