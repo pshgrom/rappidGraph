@@ -7,7 +7,3 @@ export default {
   name: "Defaultpage"
 }
 </script>
-
-<style scoped>
-
-</style>
