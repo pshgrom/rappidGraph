@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { dia, ui, shapes } from '@clientio/rappid';
+import { dia, ui, shapes, elementTools } from '@clientio/rappid';
 import * as joint from 'jointjs'
 import {generateMainBlock, generateRectNew} from "@/utils/generateFigures";
 
@@ -83,13 +83,30 @@ export default class App extends Vue {
     });
     stencil.render()
 
+    const saveGraph = () => {
+      console.log('save')
+      const jsonGraph = JSON.stringify(graph)
+      localStorage.setItem('figureSettings', jsonGraph)
+    }
+
+    const removeTools = new dia.ToolsView({
+      tools: [
+        new elementTools.Remove({
+          useModelGeometry: true,
+          action: (_evt, view) => {
+            view.model.remove()
+            saveGraph()
+          }
+        })
+      ]
+    });
+
     //Events
     stencil.on('element:dragend', (cloneView, evt, cloneArea) => { // При перемещении нового элемента на лист делаем под него родятеля и сейвим
       const {x, y} = cloneArea
       const mainBlock2 = generateMainBlock(x, y, 'test')
       graph.addCells([mainBlock2]);
-      const jsonGraph = JSON.stringify(graph)
-      localStorage.setItem('figureSettings', jsonGraph)
+      saveGraph()
     });
 
     graph.on('change:position', (cell) => { // запрещает выход элементов за родительский блок
@@ -113,9 +130,16 @@ export default class App extends Vue {
       'clear:pointerclick': graph.clear.bind(graph)
     });
 
-    paper.on('cell:pointerup', () => { // Сохраняем граф при действиях
-      const jsonGraph = JSON.stringify(graph)
-      localStorage.setItem('figureSettings', jsonGraph)
+    paper.on({
+      'cell:pointerup': () => { // Сохраняем граф при действиях
+        saveGraph()
+      },
+      'element:mouseenter': (elementView: any) => {
+        elementView.addTools(removeTools);
+      },
+      'element:mouseleave': (elementView: any) => {
+        elementView.removeTools();
+      },
     });
   }
 
