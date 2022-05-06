@@ -143,7 +143,7 @@ export default class App extends Vue {
       magnet: 'passive',
       text: 'Rect2'
     })
-    
+
     stencil.load({
       shapesGroup1: [rect],
       shapesGroup2: [rect2],
