@@ -71,8 +71,11 @@ export default defineComponent ({
     scroller.render();
 
     const saveGraph = (): void => {
-      const jsonGraph = JSON.stringify(graph)
-      localStorage.setItem('figureSettings', jsonGraph)
+      setTimeout(() => {
+        const jsonGraph = JSON.stringify(graph)
+        console.log('jsonGraph', jsonGraph)
+        localStorage.setItem('figureSettings', jsonGraph)
+      })
     }
 
     const updateGraph = (data: any): void => {

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import { ui } from "@clientio/rappid/index";
 import { generateMainBlock, generateRectNew } from "@/utils/generateFigures";
 
@@ -36,8 +36,8 @@ export default defineComponent({
       const svgInCanvas = findCanvas ? findCanvas.querySelector('.joint-paper') : ''
       if (evt.target.tagName === 'svg' && svgInCanvas) {
         const {x, y} = cloneArea
-        const mainBlock2 = generateMainBlock(x, y, 'test')
-        emit('updateGraph', mainBlock2)
+        const parentBlock = generateMainBlock(x, y, 'test')
+        emit('updateGraph', parentBlock)
       }
       emit('saveGraph')
     });
