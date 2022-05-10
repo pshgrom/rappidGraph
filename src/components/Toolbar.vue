@@ -16,7 +16,7 @@ export default defineComponent({
       type:Object
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const toolbarContainer = ref(null)
     const toolbar = new ui.Toolbar({ // Создаем шапку
       groups: {
@@ -35,8 +35,11 @@ export default defineComponent({
     toolbar.render();
 
     toolbar.on({ // Удаляем все элементы с полотна
-      // @ts-ignore
-      'clear:pointerclick': props.graph.clear.bind(props.graph)
+      'clear:pointerclick': () => {
+        // @ts-ignore
+        props.graph.clear();
+        emit('saveGraph')
+      },
     });
 
     onMounted((): void => {

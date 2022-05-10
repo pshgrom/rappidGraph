@@ -7,6 +7,7 @@
   <toolbar
     :scroller="scroller"
     :graph="graph"
+    @saveGraph="saveGraph"
   />
   <canvas-template
     :scroller="scroller"
