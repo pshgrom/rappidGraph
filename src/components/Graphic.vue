@@ -7,6 +7,7 @@
   <toolbar
     :scroller="scroller"
     :graph="graph"
+    @saveGraph="saveGraph"
   />
   <canvas-template
     :scroller="scroller"
@@ -70,8 +71,10 @@ export default defineComponent ({
     scroller.render();
 
     const saveGraph = (): void => {
-      const jsonGraph = JSON.stringify(graph)
-      localStorage.setItem('figureSettings', jsonGraph)
+      setTimeout(() => {
+        const jsonGraph = JSON.stringify(graph)
+        localStorage.setItem('figureSettings', jsonGraph)
+      })
     }
 
     const updateGraph = (data: any): void => {
@@ -107,7 +110,7 @@ export default defineComponent ({
       'element:mouseleave': (elementView: any) => {
         elementView.removeTools();
       },
-      'cell:pointerup': (cellView: any) => {
+      'cell:pointerdown': (cellView: any) => { // При перемещении родителя сохраняются координаты дочерних
         const cell = cellView.model;
         const cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
 
@@ -116,6 +119,8 @@ export default defineComponent ({
 
           if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id) cellViewBelow.model.embed(cell);
         }
+      },
+      'cell:pointerup': () => { // При перемещении родителя сохраняются координаты дочерних
         saveGraph()
       }
     });
