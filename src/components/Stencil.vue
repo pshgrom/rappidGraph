@@ -32,7 +32,9 @@ export default defineComponent({
     stencil.render()
 
     stencil.on('element:dragend', (cloneView, evt, cloneArea) => { // При перемещении нового элемента на лист делаем под него родятеля и сейвим
-      if (evt.target.tagName !== 'rect') {
+      const findCanvas = evt.target.closest('.canvas')
+      const svgInCanvas = findCanvas ? findCanvas.querySelector('.joint-paper') : ''
+      if (evt.target.tagName === 'svg' && svgInCanvas) {
         const {x, y} = cloneArea
         const mainBlock2 = generateMainBlock(x, y, 'test')
         emit('updateGraph', mainBlock2)
