@@ -73,7 +73,6 @@ export default defineComponent ({
     const saveGraph = (): void => {
       setTimeout(() => {
         const jsonGraph = JSON.stringify(graph)
-        console.log('jsonGraph', jsonGraph)
         localStorage.setItem('figureSettings', jsonGraph)
       })
     }
@@ -111,7 +110,7 @@ export default defineComponent ({
       'element:mouseleave': (elementView: any) => {
         elementView.removeTools();
       },
-      'cell:pointerup': (cellView: any) => {
+      'cell:pointerdown': (cellView: any) => { // При перемещении родителя сохраняются координаты дочерних
         const cell = cellView.model;
         const cellViewsBelow = paper.findViewsFromPoint(cell.getBBox().center());
 
@@ -120,6 +119,8 @@ export default defineComponent ({
 
           if (cellViewBelow && cellViewBelow.model.get('parent') !== cell.id) cellViewBelow.model.embed(cell);
         }
+      },
+      'cell:pointerup': () => { // При перемещении родителя сохраняются координаты дочерних
         saveGraph()
       }
     });
